@@ -144,4 +144,7 @@ POST	/ Salva o cliente e projeto
 Autor: Matheus Rabelo, José Azarias, Daiane Moreira
 
 Linkedin: https://www.linkedin.com/in/matheus-rabelo-2a7b27196/ 
+
 Linkedin: https://www.linkedin.com/in/jose-azarias-05623a1ab/
+
+LinkedIn: https://www.linkedin.com/in/daiane-reis-17247a29a/
