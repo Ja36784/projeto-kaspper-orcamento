@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geração de Pré-Orçamento</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        body {
+            background: #607d8b99 !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px #dee2e6;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #8e44ad;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #0d6efd;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #000000;
+        }
+        .form-check-label{
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-custom {
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 20px auto 0;
+        }
+
+        .btn-custom:hover {
+            background-color: #6c3483;
+        }
+
+        .project-option {
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .project-option:hover {
+            transform: scale(1.05);
+            border-color: #3498db;
+        }
+
+        .project-option input {
+            display: none;
+        }
+
+        .project-option label {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .project-option p {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        text-center {
+            text-align: center;
+        }
+
+        .form-check-inline {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .w-25 {
+            width: 25%;
+            display: inline-block;
+        }
+       
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!DOCTYPE html>
+        <html lang="pt-br">
+
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Teste Bootstrap</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+                rel="stylesheet">
+        </head>
+
+        <body>
+            <div class="container">
+                <form th:action="@{/clientes}" th:object="${cliente}" method="post" class="needs-validation" novalidate>
+                    <!-- Informação Cliente -->
+                    <div class="section-title text-center "><i class="fas fa-user "></i> Informação Cliente</div>
+                    <div class="container-fluid px-0">
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="nomeCliente" class="form-label">Nome Cliente:</label>
+                                <input type="text" value="nomeCliente" id="nomeCliente" th:field="*{nomeCliente}"
+                                    class="form-control" placeholder="Digite o seu nome" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="tipoCliente" class="form-label">Tipo de Cliente:</label>
+                                <select id="tipoCliente" name="tipoCliente" th:field="*{tipoCliente}"
+                                    class="form-select" required>
+                                    <option value="" disabled selected>Selecione</option>
+                                    <option value="FISICA">Física</option>
+                                    <option value="JURIDICA">Jurídica</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="cpfCnpj" class="form-label">CPF/CNPJ:</label>
+                                <input type="text" id="cpfCnpj" th:field="*{cpfCnpj}" class="form-control"
+                                    placeholder="Digite o CPF ou CNPJ" required pattern="\d{11}|\d{14}">
+                                <div class="invalid-feedback">Campo CPF/CNPJ é obrigatório e deve ser válido.</div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="email" class="form-label">E-mail:</label>
+                                <input type="email" value="email" id="email" th:field="*{email}" class="form-control"
+                                    placeholder="Digite o e-mail" required />
+                                <div class="invalid-feedback">Por favor, insira um e-mail válido.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="telefone" class="form-label">Telefone:</label>
+                                <input type="text" id="telefone" th:field="*{telefone}" class="form-control"
+                                    placeholder="Digite o telefone" required />
+                                <div class="invalid-feedback">Por favor, insira um telefone válido.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="cep" class="form-label">CEP:</label>
+                                <input type="text" id="cep" th:field="*{cep}" class="form-control"
+                                    placeholder="Digite o CEP" required />
+                            </div>
+                            <div id="loading-indicator" style="display: none; text-align: center; margin-top: 10px;">
+                                <p>Carregando informações do CEP...</p>
+                            </div>
+                        </div>
+                        <div id="address-fields" class="hidden">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="endereco" class="form-label">Endereço</label>
+                                    <input type="text" id="endereco" th:field="*{endereco}" class="form-control" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="bairro" class="form-label">Bairro:</label>
+                                    <input type="text" id="bairro" th:field="*{bairro}" class="form-control" />
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="complemento" class="form-label">Completo:</label>
+                                    <input type="text" id="complemento" th:field="*{complemento}" class="form-control"
+                                        placeholder="Digite o complemento" required />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="spinner-container" style="display: none; text-align: center; margin-top: 20px;">
+                        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">Gerando Pré-Orçamento...</span>
+                        </div>
+                        <p style="margin-top: 10px;">Estamos gerando o seu pré-orçamento, aguarde um momento...</p>
+                    </div>
+                    <br>
+                    <div class="section-title text-center"><i class="fas fa-user" ></i> Informação Projeto</div>
+                    <div class="container-fluid px-0">
+                        <br>
+                    <div class="mt-4">
+                        <label for="quantidadeFuncionalidades" class="form-label text-center d-block">
+                            <strong>Funcionalidades</strong>
+                            <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                title="Uma funcionalidade é uma ação ou tarefa que o sistema deve realizar para atender a uma necessidade do usuário.
+                                Exemplo:
+                                Em um aplicativo de pedidos de comida, a funcionalidade Escolher itens do cardápio permite que o usuário visualize os pratos disponíveis e os adicione ao carrinho."></i>
+                        </label>
+                        <input type="number" class="form-control text-center" id="quantidadeFuncionalidades"
+                            th:field="*{projeto.quantidadeFuncionalidades}"
+                            placeholder="Digite quantas funcionalidades você precisa" required>
+                        <div class="invalid-feedback">Por favor, insira a quantidade de funcionalidade.</div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="complexidadeProjeto" class="form-label text-center d-block">
+                            <strong>Complexidade</strong>
+                            <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                title="A complexidade de um projeto refere-se à dificuldade em implementar as funcionalidades ou resolver os problemas.
+                                Isso depende de fatores como tecnologia utilizada, número de funcionalidades, quantidade de pessoas envolvidas e integração com outros sistemas."></i>
+                        </label>
+                        <select class="form-select text-center" id="complexidadeProjeto"
+                            th:field="*{projeto.complexidadeProjeto}">
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="prazoProjeto" class="form-label text-center d-block">
+                            <strong>Prazo do Projeto</strong>
+                            <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                title="O prazo do projeto é o tempo disponível para que ele seja planejado, desenvolvido e entregue.
+                                É definido com base no escopo (o que será feito), na complexidade e nos recursos disponíveis.
+                                Fatores que influenciam o prazo:
+                                Número de funcionalidades.
+                                Complexidade do projeto.
+                                Tamanho da equipe e experiência dos envolvidos.
+                                Necessidade de testes e revisões.."></i>
+                        </label>
+                        <select class="form-select text-center" id="prazoProjeto" th:field="*{projeto.prazoProjeto}">
+                            <option value="flexivel">Flexível - 12 meses</option>
+                            <option value="moderado">Moderado - 8 meses</option>
+                            <option value="urgente">Urgente - 6 meses</option>
+                        </select>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="vaiTerIntegracao"
+                                th:field="*{projeto.vaiTerIntegracao}" onchange="toggleField('integracaoField', this)">
+                            <label class="form-check-label" for="vaiTerIntegracao">Vai ter integração?</label>
+                            <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                            title="Integração é quando um sistema ou projeto é conectado a outros sistemas, serviços ou ferramentas para trocar informações ou trabalhar juntos.
+                            Exemplo:
+                            Em um site de e-commerce, a integração com o sistema de pagamento (como PayPal ou Pix) permite que o cliente pague diretamente pelo site."></i>
+                            <br>
+                        </div>
+                        <div id="integracaoField" style="display: none;" class="mt-2">
+                            <label class="form-label">Quantas Integrações?</label>
+                            <input type="number" id="quantasIntegracao" class="form-control text-center"
+                                th:field="*{projeto.quantasIntegracao}" min="1"
+                                placeholder="Digite quantas integrações você precisa" required>
+                            <div class="invalid-feedback">Por favor, insira a quantidade de integrações.</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="vaiTerAutomacao"
+                                th:field="*{projeto.vaiTerAutomacao}" onchange="toggleField('automacaoField', this)">
+                            <label class="form-check-label" for="vaiTerAutomacao">Vai ter automação?</label>
+                            <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                title="Automação é quando tarefas repetitivas ou manuais são realizadas automaticamente pelo sistema, sem precisar de intervenção humana.
+                                Exemplo:
+                                Em um sistema de gestão, a automação pode enviar notificações por e-mail para clientes sobre vencimento de faturas, sem que ninguém precise enviar manualmente."></i>
+                            <br>
+                        </div>
+                        <div id="automacaoField" style="display: none;" class="mt-2">
+                            <label class="form-label">Quantas Automações?</label>
+                            <input type="number" id="quantasAutomacao" class="form-control text-center" th:field="*{projeto.quantasAutomacao}"
+                                min="1" placeholder="Digite quantas automações você precisa" required>
+                            <div class="invalid-feedback">Por favor, insira a quantidade de automações.</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button type="submit" class="btn btn-primary"
+                        onclick="gerarPreOrcamento(event)">
+                    Gerar pré-Orçamento
+                </button>
+                    </div>
+            </div>
+            </form>
+    </div>
+
+    <script>
+        function toggleField(id, checkbox) {
+            const field = document.getElementById(id);
+            field.style.display = checkbox.checked ? 'block' : 'none';
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        // Função para inicializar a página com o campo Complexidade vazio
+        document.addEventListener('DOMContentLoaded', function () {
+            var complexidadeSelect = document.getElementById('complexidadeProjeto');
+            complexidadeSelect.value = ''; // Define o campo como vazio ao carregar a página
+        });
+
+        // Função para atualizar a complexidade com base no número de funcionalidades
+        document.getElementById('quantidadeFuncionalidades').addEventListener('input', function () {
+            var funcionalidades = parseInt(this.value, 10) || 0; // Garante que será um número válido
+            var complexidadeSelect = document.getElementById('complexidadeProjeto');
+
+            // Verifica se o campo de funcionalidade está vazio ou inválido
+            if (this.value.trim() === '' || funcionalidades <= 0) {
+                complexidadeSelect.value = ''; // Reseta o campo
+                return;
+            }
+
+            // Atualiza a complexidade com base na quantidade de funcionalidades
+            if (funcionalidades >= 1 && funcionalidades <= 10) {
+                complexidadeSelect.value = 'baixa';
+            } else if (funcionalidades > 10 && funcionalidades <= 20) {
+                complexidadeSelect.value = 'media';
+            } else {
+                complexidadeSelect.value = 'alta';
+            }
+        });
+    </script>
+    <script>
+        async function gerarPreOrcamento(event) {
+            event.preventDefault();
+            const cliente = {
+                nomeCliente: document.getElementById('nomeCliente').value,
+                tipoCliente: document.getElementById('tipoCliente').value,
+                cpfCnpj: document.getElementById('cpfCnpj').value,
+                email: document.getElementById('email').value,
+                telefone: document.getElementById('telefone').value,
+                cep: document.getElementById('cep').value,
+                endereco: document.getElementById('endereco').value,
+                bairro: document.getElementById('bairro').value,
+                complemento: document.getElementById('complemento').value,
+                projeto: {
+                    quantidadeFuncionalidades: parseInt(document.getElementById('quantidadeFuncionalidades').value, 10),
+                    complexidadeProjeto: document.getElementById('complexidadeProjeto').value,
+                    prazoProjeto: document.getElementById('prazoProjeto').value,
+                    vaiTerIntegracao: document.getElementById('vaiTerIntegracao').checked,
+                    vaiTerAutomacao: document.getElementById('vaiTerAutomacao').checked,
+                    quantasIntegracao: parseInt(document.getElementById('quantasIntegracao').value, 10),
+                    quantasAutomacao: parseInt(document.getElementById('quantasAutomacao').value, 10)
+                }
+            };
+    
+            // Validações
+            if (!cliente.nomeCliente || !cliente.email || !cliente.tipoCliente || !cliente.cpfCnpj || !cliente.projeto.quantidadeFuncionalidades) {
+                alert("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
+    
+            // Mostrar spinner
+            const spinner = document.getElementById('spinner-container');
+            spinner.style.display = 'block';
+    
+            try {
+                // Enviar requisição
+                const response = await fetch('/clientes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(cliente)
+                });
+    
+                if (response.ok) {
+                    const redirectUrl = await response.text(); 
+                    window.location.href = redirectUrl;      
+                } else {
+                    const errorMessage = await response.text();
+                    alert(`Erro ao gerar pré-orçamento: ${errorMessage}`);
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert("Erro ao conectar com o servidor. Tente novamente mais tarde.");
+            } finally {
+                spinner.style.display = 'none'; // Ocultar spinner
+            }
+        }
+    
+        document.querySelector('button[type="submit"]').addEventListener('click', gerarPreOrcamento);
+    </script>
+    <script>
+        document.getElementById('cep').addEventListener('blur', async function () {
+            const cep = this.value.replace(/\D/g, '');
+            const addressFields = document.getElementById('address-fields');
+            const loadingIndicator = document.getElementById('loading-indicator');
+
+            if (cep.length !== 8) {
+                alert("CEP inválido. Digite um CEP com 8 dígitos.");
+                return;
+            }
+
+            try {
+
+                if (loadingIndicator) loadingIndicator.style.display = 'block';
+                const response = await fetch(`/api/cep/${cep}`);
+                if (!response.ok) {
+                    throw new Error("Não foi possível buscar o endereço. Verifique o CEP e tente novamente.");
+                }
+
+                const data = await response.json();
+
+                if (data.erro) {
+                    alert("CEP não encontrado.");
+                    addressFields.classList.add('hidden');
+                    return;
+                }
+
+
+                document.getElementById('endereco').value = data.logradouro || '';
+                document.getElementById('bairro').value = data.bairro || '';
+                document.getElementById('complemento').value = data.complemento || '';
+
+
+                addressFields.classList.remove('hidden');
+            } catch (error) {
+                console.error("Erro ao buscar CEP:", error);
+                alert("Erro ao buscar CEP. Tente novamente mais tarde.");
+                addressFields.classList.add('hidden');
+            } finally {
+
+                if (loadingIndicator) loadingIndicator.style.display = 'none';
+            }
+        });
+
+
+        document.getElementById('cep').addEventListener('input', function () {
+            const cep = this.value.replace(/\D/g, '');
+            const addressFields = document.getElementById('address-fields');
+
+            if (cep === '') {
+
+                document.getElementById('endereco').value = '';
+                document.getElementById('bairro').value = '';
+                document.getElementById('complemento').value = '';
+
+
+                addressFields.classList.add('hidden');
+            }
+        });                
+    </script>
+    <script>
+        (function () {
+            'use strict';
+            const form = document.querySelector('.needs-validation');
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            });
+        })();
+    </script>
+    <script>
+        document.getElementById('complexidadeProjeto').addEventListener('change', function (event) {
+            event.target.value = event.target.defaultValue;
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        });
+    </script>
+    </div>
+</body>
+</body>
+
+</html>
