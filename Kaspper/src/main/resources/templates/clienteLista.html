@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Clientes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<style>
+    /* Estilos gerais */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f7f9fc;
+        color: #333;
+    }
+
+    h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #4a4a4a;
+    }
+
+    .container {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Tabela */
+    table {
+        margin-top: 20px;
+    }
+
+    .thead-dark {
+        background-color: #343a40;
+        color: #fff;
+    }
+    input.form-control {
+        width: 61% !important;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2;
+    }
+
+    .table tbody tr:hover {
+        background-color: #dee2e6;
+    }
+
+    td, th {
+        text-align: center;
+        vertical-align: middle;
+        padding: 10px;
+    }
+
+    /* Botões */
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        padding: 4px 10px;
+        margin: 5px;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .btn-primary, .btn-info {
+        border-radius: 4px;
+    }
+
+    .btn-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Mensagem de sucesso */
+    .alert-success {
+        font-weight: bold;
+        border-radius: 4px;
+    }
+
+    /* Rodapé */
+    footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #666;
+    }
+    #background-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
+
+</style>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Listagem de Clientes</h1>
+
+        <!-- Exibir mensagem de sucesso -->
+        <div th:if="${mensagem}" class="alert alert-success text-center" role="alert">
+            <i class="fas fa-check-circle"></i>
+            <span th:text="${mensagem}"></span>
+        </div>
+
+        <!-- Barra de busca -->
+        <div class="mb-3">
+            <form th:action="@{/clientes/buscar}" method="get" class="d-flex ms-auto" style="max-width: 400px;">
+                <input type="text" name="termo" class="form-control" placeholder="Digite Nome, CNPJ ou E-mail" required>
+                <button type="submit" class="btn btn-primary ms-2">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+                <a href="/clientes" class="btn btn-secondary ms-2">
+                    <i class="fas fa-sync"></i> <!-- Ícone de recarregar -->
+                </a>
+            </form>
+        </div>
+
+        <!-- Tabela de clientes -->
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nome</th>
+                    <th>CPF/CNPJ</th>
+                    <th>Email</th>
+                    <th>Funcionalidades</th>
+                    <th>Automações</th>
+                    <th>Integrações</th>
+                    <th>Complexidade</th>
+                    <th>Prazo</th>
+                    <th>Valor Final</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="cliente : ${clientes}">
+                    <td th:text="${cliente.nomeCliente}"></td>
+                    <td th:text="${cliente.cpfCnpj}"></td>
+                    <td th:text="${cliente.email}"></td>
+                    <td th:text="${cliente.projeto.quantidadeFuncionalidades}"></td>
+                    <td th:text="${cliente.projeto.quantasAutomacao}"></td>
+                    <td th:text="${cliente.projeto.quantasIntegracao}"></td>
+                    <td th:text="${cliente.projeto.complexidadeProjeto}"></td>
+                    <td th:text="${cliente.projeto.prazoProjeto}"></td>
+                    <td th:text="${cliente.projeto.custoTotal}"></td>
+                    <td th:text="${cliente.status}"></td>
+                    <td>
+                        <a href="#" 
+                           th:href="@{'/clientes/' + ${cliente.idCliente} + '/excluir'}" 
+                           class="btn btn-danger btn-sm btn-icon" 
+                           data-bs-toggle="modal" 
+                           data-bs-target="#confirmDeleteModal" 
+                           th:attr="data-nome-cliente=${cliente.nomeCliente}"
+                           onclick="setDeleteLink(this);">
+                            <i class="fas fa-trash"></i> Excluir
+                        </a>
+                        <a href="#" 
+                           class="btn btn-info btn-sm btn-icon" 
+                           data-bs-toggle="modal" 
+                           data-bs-target="#addInfoModal" 
+                           onclick="setAddInfoData('${cliente.idCliente}');">
+                            <i class="fas fa-edit"></i> Alterar
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmação de Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="deleteConfirmationText">Tem certeza que deseja excluir este cliente?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="deleteConfirmLink" href="#" class="btn btn-danger">Excluir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    Modal de Adicionar Informação
+    <div class="modal fade" id="addInfoModal" tabindex="-1" aria-labelledby="addInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addInfoModalLabel">Alterar</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/clientes/adicionarInformacao}" method="post">
+                        <input type="hidden" id="clienteId" name="idCliente">
+    
+                        <div class="mb-3">
+                            <label for="responsavelAlteracao" class="form-label">Responsável pela Alteração</label>
+                            <input type="text" class="form-control" id="responsavelAlteracao" name="responsavelAlteracao" required>
+                        </div>
+    
+                        <div class="mb-3 col-md-4">
+                            <label for="status" class="form-label">Status Orçamento:</label>
+                            <select id="status" name="status" class="form-select" required>
+                                <option value="" disabled selected>Selecione</option>
+                                <option value="CONCLUIDO">Concluído</option>
+                                <option value="AGUARDANDO_VALIDACAO">Em Negociação</option>
+                                <option value="EM_ANALISE_COMERCIAL">Em Análise Comercial</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dataAlteracao" class="form-label">Data de Alteração</label>
+                            <input type="datetime-local" class="form-control" id="dataAlteracao" name="dataAlteracao" required readonly>
+                        </div>
+    
+                        <div class="mb-3">
+                            <label for="informativo" class="form-label">Informativo</label>
+                            <textarea class="form-control" id="informativo" name="informativo" rows="3" required></textarea>
+                        </div>
+    
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setDeleteLink(element) {
+            const deleteUrl = element.getAttribute("href");
+            const clienteNome = element.getAttribute("data-nome-cliente");
+            
+            document.getElementById("deleteConfirmLink").setAttribute("href", deleteUrl);
+            document.getElementById("deleteConfirmationText").textContent =
+                `Tem certeza que deseja excluir o cliente ${clienteNome}?`;
+        }
+
+        // Preenche automaticamente a data de alteração no modal
+        document.getElementById("dataAlteracao").value = new Date().toISOString().slice(0, 16);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

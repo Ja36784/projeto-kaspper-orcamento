@@ -1,5 +1,7 @@
 package com.projeto_final.Kaspper.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,4 +31,16 @@ public class ClienteService {
         return clienteRepository.findById(id).orElse(null);
     }
 
+    public List<Cliente> listarTodosClientes() {
+        return clienteRepository.findAll();
+    }
+
+    @Transactional
+    public void excluirDadosClienteEProjeto(Integer id) {
+        clienteRepository.deleteById(id);
+    }
+
+    public List<Cliente> buscarClientesPorNomeCnpjEmail(String termo) {
+        return clienteRepository.buscarPorNomeCnpjEmail(termo);
+    }
 }

@@ -16,6 +16,7 @@ public class ProjetoService {
         calcularDetalhesProjeto(projeto);
         return projetoRepository.save(projeto);
     }
+
     private void calcularDetalhesProjeto(Projeto projeto) {
         projeto.setValorFuncionalidade(calcularCustoFuncionalidade(projeto.getQuantidadeFuncionalidades()));
         projeto.setValorAutomacao(calcularCustoAutomacao(projeto.getVaiTerAutomacao(), projeto.getQuantasAutomacao()));
@@ -36,50 +37,67 @@ public class ProjetoService {
     }
 
     private double calcularValorComplexidade(String complexidade) {
+        if (complexidade == null || complexidade.isEmpty()) {
+            complexidade = "baixa";  // Definir um valor padrão para complexidade
+        }
         switch (complexidade.toLowerCase()) {
             case "baixa":
-                return 1000.0; 
+                return 2500.0;
             case "media":
-                return 2000.0;
+                return 3000.0;
             case "alta":
-                return 3000.0; 
+                return 5000.0;
             default:
                 return 0.0;
         }
     }
 
     private double calcularValorPrazo(String prazo) {
+        if (prazo == null) {
+            return 0.0; // Ou outro valor padrão se prazo for null
+        }
+
         switch (prazo.toLowerCase()) {
             case "flexivel":
-                return 2000.0; 
+                return 3000.0;
             case "moderado":
-                return 3000.0; 
+                return 4000.0;
             case "urgente":
-                return 5000.0; 
+                return 5000.0;
             default:
                 return 0.0;
         }
     }
 
     private double calcularCustoFuncionalidade(Integer quantidadeFuncionalidades) {
-        double valorHoraFuncionalidade = 100.0;
-        return quantidadeFuncionalidades * 45 * valorHoraFuncionalidade;
+        double valorHoraFuncionalidade = 85.0;
+        return quantidadeFuncionalidades * 42 * valorHoraFuncionalidade;
     }
 
     private double calcularCustoAutomacao(Boolean vaiTerAutomacao, Integer quantasAutomacao) {
-        double valorHoraAutomacao = 120.0;
-        return quantasAutomacao * 55 * valorHoraAutomacao;
+        if (vaiTerAutomacao == null || quantasAutomacao == null) {
+            return 0.0; // Retorna 0 caso não tenha automação ou quantasAutomacao seja null
+        }
+        double valorHoraAutomacao = 89.0;
+        return quantasAutomacao * 53 * valorHoraAutomacao;
     }
 
     private double calcularCustoIntegracao(Boolean vaiTerIntegracao, Integer quantasIntegracao) {
-        double valorHoraAutomacao = 120.0;
-        return quantasIntegracao * 55 * valorHoraAutomacao;
+        if (vaiTerIntegracao == null || quantasIntegracao == null) {
+            return 0.0; // Retorna 0 caso não tenha integração ou quantasIntegracao seja null
+        }
+        double valorHoraIntegracao = 90.0;
+        return quantasIntegracao * 55 * valorHoraIntegracao;
     }
 
     private int calcularPrazoTotal(Projeto projeto) {
         int horasFuncionalidade = projeto.getQuantidadeFuncionalidades() * 45;
-        int horasAutomacao = projeto.getQuantasAutomacao() * 55;
-        int horasIntegracao = projeto.getQuantasIntegracao() * 55;
+
+        // Verificar se quantasAutomacao não é null, caso contrário, atribuir 0
+        int horasAutomacao = (projeto.getQuantasAutomacao() != null ? projeto.getQuantasAutomacao() : 0) * 52;
+
+        // Verificar se quantasIntegracao não é null, caso contrário, atribuir 0
+        int horasIntegracao = (projeto.getQuantasIntegracao() != null ? projeto.getQuantasIntegracao() : 0) * 51;
 
         return horasFuncionalidade + horasAutomacao + horasIntegracao;
     }

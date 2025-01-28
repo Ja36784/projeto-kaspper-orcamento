@@ -1,5 +1,7 @@
 package com.projeto_final.Kaspper.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -7,9 +9,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "tb_cliente")
@@ -30,12 +32,24 @@ public class Cliente {
     private String endereco;
     private String bairro;
     private String complemento;
+    private LocalDateTime dataAlteracao;
+    private String responsavelAlteracao;
+    private String informativo;
+    private Status status;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_projeto", nullable = false) // Relacionamento com a tabela Projeto
     private Projeto projeto;
 
     public Cliente() {
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public Integer getIdCliente() {
@@ -126,9 +140,34 @@ public class Cliente {
         this.projeto = projeto;
     }
 
-    public Cliente(Integer idCliente, String nomeCliente, TipoPessoa tipoCliente,
-            @NotBlank(message = "O CPF não pode estar em branco") String cpfCnpj, String email, String telefone,
-            String cep, String endereco, String bairro, String complemento, Projeto projeto) {
+    public LocalDateTime getDataAlteracao() {
+        return dataAlteracao;
+    }
+
+    public void setDataAlteracao(LocalDateTime dataAlteracao) {
+        this.dataAlteracao = dataAlteracao;
+    }
+
+    public String getResponsavelAlteracao() {
+        return responsavelAlteracao;
+    }
+
+    public void setResponsavelAlteracao(String responsavelAlteracao) {
+        this.responsavelAlteracao = responsavelAlteracao;
+    }
+
+    public String getInformativo() {
+        return informativo;
+    }
+
+    public void setInformativo(String informativo) {
+        this.informativo = informativo;
+    }
+
+    public Cliente(Integer idCliente, String nomeCliente, TipoPessoa tipoCliente, String cpfCnpj, String email,
+            String telefone, String cep, String endereco, String bairro, String complemento,
+            LocalDateTime dataAlteracao, String responsavelAlteracao, String informativo, Status status,
+            Projeto projeto) {
         this.idCliente = idCliente;
         this.nomeCliente = nomeCliente;
         this.tipoCliente = tipoCliente;
@@ -139,6 +178,10 @@ public class Cliente {
         this.endereco = endereco;
         this.bairro = bairro;
         this.complemento = complemento;
+        this.dataAlteracao = dataAlteracao;
+        this.responsavelAlteracao = responsavelAlteracao;
+        this.informativo = informativo;
+        this.status = status;
         this.projeto = projeto;
     }
 
@@ -146,7 +189,9 @@ public class Cliente {
     public String toString() {
         return "Cliente [idCliente=" + idCliente + ", nomeCliente=" + nomeCliente + ", tipoCliente=" + tipoCliente
                 + ", cpfCnpj=" + cpfCnpj + ", email=" + email + ", telefone=" + telefone + ", cep=" + cep
-                + ", endereco=" + endereco + ", bairro=" + bairro + ", complemento=" + complemento + ", projeto="
-                + projeto + "]";
+                + ", endereco=" + endereco + ", bairro=" + bairro + ", complemento=" + complemento + ", dataAlteracao="
+                + dataAlteracao + ", responsavelAlteracao=" + responsavelAlteracao + ", informativo=" + informativo
+                + ", status=" + status + ", projeto=" + projeto + "]";
     }
+
 }

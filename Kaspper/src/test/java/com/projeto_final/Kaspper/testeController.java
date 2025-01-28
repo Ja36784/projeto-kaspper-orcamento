@@ -23,7 +23,7 @@ public class testeController {
         cliente.setEmail("teste@exemplo.com");
 
         Projeto projeto = new Projeto();
-        projeto.setTipoProjeto("Software");
+        //projeto.setTipoProjeto("Software");
         projeto.setQuantidadeFuncionalidades(5);
 
         cliente.setProjeto(projeto);
